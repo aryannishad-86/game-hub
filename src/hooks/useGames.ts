@@ -29,4 +29,4 @@ const useGames = (
     }},
     [gameQuery]);
 
-export default useGames;
+export default useGames; 
