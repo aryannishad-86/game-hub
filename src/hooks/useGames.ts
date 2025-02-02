@@ -1,27 +1,29 @@
-import { useEffect, useState } from "react";
-import { GameQuery } from "../App";
-import useData from "./useData";
-import { Genre } from "./useGenre";
-import axios from "axios";
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
-export interface Platform{
-    id: number;
-    name: string;
-    slug: string;
+interface Platform {
+  id: number;
+  name: string;
+  slug: string;
 }
 
-export interface Game {
-    id: number;
-    name: string;
-    background_image: string;
-    parent_platforms: { platform: Platform }[];
-    metacritic: number;
+interface GameQuery {
+  genre?: { id: number };
+  platform?: { id: number };
+  sortOrder?: string;
+  searchText?: string;
 }
 
-
+interface Game {
+  id: number;
+  name: string;
+  background_image: string;
+  parent_platforms: { platform: Platform }[];
+  metacritic: number;
+}
 
 const useGames = (gameQuery: GameQuery) => {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<Game[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -52,11 +54,4 @@ const useGames = (gameQuery: GameQuery) => {
   return { data, error, isLoading };
 };
 
-const API_URL = 'http://localhost:5000/api/games';
-
-fetch(API_URL)
-  .then(response => response.json())
-  .then(data => console.log(data))
-  .catch(error => console.error('Error:', error));
-
-export default useGames; 
+export default useGames;
