@@ -29,4 +29,11 @@ const useGames = (
     }},
     [gameQuery]);
 
+const API_URL = 'http://localhost:5000/api/games';
+
+fetch(API_URL)
+  .then(response => response.json())
+  .then(data => console.log(data))
+  .catch(error => console.error('Error:', error));
+
 export default useGames; 
