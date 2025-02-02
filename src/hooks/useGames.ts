@@ -1,4 +1,4 @@
-import { GameQuery } from "../App";
+
 import useData from "./useData";
 import { Genre } from "./useGenre";
 
@@ -18,22 +18,46 @@ export interface Game {
 
 
 
-const useGames = (
-    gameQuery: GameQuery) => 
-        useData<Game>('/games', {
-        params: {
-        genres: gameQuery.genre?.id, 
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+
+interface GameQuery {
+  genre?: { id: number };
+  platform?: { id: number };
+  sortOrder?: string;
+  searchText?: string;
+}
+
+const useGames = (gameQuery: GameQuery) => {
+  const [data, setData] = useState([]);
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    setIsLoading(true);
+    setError(null);
+
+    const API_URL = 'http://localhost:5000/api/games';
+
+    axios.get(API_URL, {
+      params: {
+        genres: gameQuery.genre?.id,
         platforms: gameQuery.platform?.id,
         ordering: gameQuery.sortOrder,
-        search: gameQuery.searchText
-    }},
-    [gameQuery]);
+        search: gameQuery.searchText,
+      },
+    })
+      .then(response => {
+        setData(response.data.results);
+        setIsLoading(false);
+      })
+      .catch(error => {
+        setError(error.message);
+        setIsLoading(false);
+      });
+  }, [gameQuery]);
 
-const API_URL = 'http://localhost:5000/api/games';
+  return { data, error, isLoading };
+};
 
-fetch(API_URL)
-  .then(response => response.json())
-  .then(data => console.log(data))
-  .catch(error => console.error('Error:', error));
-
-export default useGames; 
+export default useGames;
