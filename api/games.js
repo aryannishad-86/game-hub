@@ -3,7 +3,7 @@ const axios = require('axios');
 
 module.exports = async (req, res) => {
   const { query } = req;
-  const API_URL = 'https://api.rawg.io/api/games';
+  const API_URL = 'api.rawg.io/api/games';
 
   try {
 	const response = await axios.get(API_URL, { params: query });
